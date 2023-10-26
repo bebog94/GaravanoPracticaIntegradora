@@ -1,22 +1,22 @@
 const socketClient = io();
-const h4Name = document.getElementById("name");
+const h4user = document.getElementById("user");
 const form = document.getElementById("chatForm");
 const inputMessage = document.getElementById("message");
 const divChat = document.getElementById("chat");
 let user;
 Swal.fire({
   title: "Welcome!",
-  text: "What is your name",
+  text: "What is your user",
   input: "text",
   inputValidator: (value) => {
     if (!value) {
-      return "Name is required";
+      return "user is required";
     }
   },
   confirmButtonText: "Enter",
 }).then((input) => {
   user = input.value;
-  h4Name.innerText = user;
+  h4user.innerText = user;
   socketClient.emit("newUser", user);
 });
 
@@ -42,7 +42,7 @@ socketClient.on("connected", () => {
 form.onsubmit = (e) => {
   e.preventDefault();
   const infoMessage = {
-    name: user,
+    user: user,
     message: inputMessage.value,
   };
   socketClient.emit("message", infoMessage);
@@ -62,7 +62,7 @@ form.onsubmit = (e) => {
 socketClient.on("chat", (messages) => {
   const chat = messages
     .map((m) => {
-      return `<p>${m.name}: ${m.message}</p>`;
+      return `<p>${m.user}: ${m.message}</p>`;
     })
     .join(" ");
   divChat.innerHTML = chat;
